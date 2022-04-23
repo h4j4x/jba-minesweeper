@@ -13,7 +13,13 @@ fun main() {
     for (rowIndex in 0 until board.size) {
         for (columnIndex in 0 until board.size) {
             val cell = board.cellAt(rowIndex = rowIndex, columnIndex = columnIndex)
-            print(if (cell.mined) MINE_CELL else SAFE_CELL)
+            if (cell != null) {
+                if (cell.mined) {
+                    print(MINE_CELL)
+                } else {
+                    print(if (cell.minesAround > 0) cell.minesAround else SAFE_CELL)
+                }
+            }
         }
         println()
     }
