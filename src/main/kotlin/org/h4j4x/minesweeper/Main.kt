@@ -18,14 +18,11 @@ fun main() {
     }
     print("How many mines do you want on the field? ")
     repeat(readln().toInt()) {
-        var x: Int
-        var y: Int
+        var pair: Pair<Int, Int>
         do {
-            val pair = randomPoint(boardSize)
-            x = pair.first
-            y = pair.second
-        } while (board[x][y] == MINE_CELL)
-        board[x][y] = MINE_CELL
+            pair = randomPoint(boardSize)
+        } while (board[pair.first][pair.second] == MINE_CELL)
+        board[pair.first][pair.second] = MINE_CELL
     }
     for (row in board) {
         println(row.joinToString(""))
