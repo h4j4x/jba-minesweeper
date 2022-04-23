@@ -4,6 +4,9 @@ import kotlin.random.Random
 
 class Board(val size: Int) {
     private val cells: List<List<Cell>>
+    private var minesCount = 0
+    private var minesCleared = 0
+    private var safeCellsCleared = 0
 
     init {
         cells = mutableListOf()
@@ -16,10 +19,11 @@ class Board(val size: Int) {
         }
     }
 
-    fun setMines(count: Int) {
-        clearMines()
+    fun setMines(minesCount: Int) {
+        clear()
+        this.minesCount = minesCount
         val random = Random.Default
-        repeat(count) {
+        repeat(minesCount) {
             var cell: Cell?
             do {
                 val rowIndex = random.nextInt(from = 0, until = size)
@@ -41,11 +45,13 @@ class Board(val size: Int) {
         return null
     }
 
-    private fun clearMines() {
+    private fun clear() {
+        minesCount = 0
+        minesCleared = 0
+        safeCellsCleared = 0
         for (row in cells) {
             for (cell in row) {
-                cell.mined = false
-                cell.minesAround = 0
+                cell.clear()
             }
         }
     }
@@ -67,4 +73,18 @@ class Board(val size: Int) {
         }
         return cellsAround
     }
+
+    fun hasMinesUncleared() = minesCount != minesCleared
+
+    fun toggleCellCleared(cell: Cell) {
+        val step = if (cell.cleared) -1 else 1
+        cell.cleared = !cell.cleared
+        if (cell.mined) {
+            minesCleared += step
+        } else {
+            safeCellsCleared += step
+        }
+    }
+
+    fun hasSafeCellsCleared() = safeCellsCleared > 0
 }

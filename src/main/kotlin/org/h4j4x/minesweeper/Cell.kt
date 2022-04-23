@@ -1,8 +1,16 @@
 package org.h4j4x.minesweeper
 
-data class Cell(val rowIndex: Int, val columnIndex: Int) {
+class Cell(val rowIndex: Int, val columnIndex: Int) {
     var mined = false
+    var cleared = false
     var minesAround = 0
+
+    fun clear() {
+        mined = false
+        cleared = false
+        minesAround = 0
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
