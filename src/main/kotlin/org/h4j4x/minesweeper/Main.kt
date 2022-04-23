@@ -18,10 +18,8 @@ fun main() {
         val (columnIndex, rowIndex) = readln().split(" ").map { it.toInt() }
         val cell = board.cellAt(rowIndex = rowIndex - 1, columnIndex = columnIndex - 1)
         if (cell != null) {
-            if (!cell.mined && cell.minesAround > 0) {
+            if (!board.toggleCellCleared(cell)) {
                 println("There is a number here!")
-            } else {
-                board.toggleCellCleared(cell)
             }
             println()
         } else {

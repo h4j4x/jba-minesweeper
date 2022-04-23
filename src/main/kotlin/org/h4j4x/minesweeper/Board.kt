@@ -76,7 +76,10 @@ class Board(val size: Int) {
 
     fun hasMinesUncleared() = minesCount != minesCleared
 
-    fun toggleCellCleared(cell: Cell) {
+    fun toggleCellCleared(cell: Cell): Boolean {
+        if (!cell.mined && cell.minesAround > 0) {
+            return false
+        }
         val step = if (cell.cleared) -1 else 1
         cell.cleared = !cell.cleared
         if (cell.mined) {
@@ -84,6 +87,7 @@ class Board(val size: Int) {
         } else {
             safeCellsCleared += step
         }
+        return true
     }
 
     fun hasSafeCellsCleared() = safeCellsCleared > 0
