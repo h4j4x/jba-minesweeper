@@ -12,12 +12,12 @@ fun randomPoint(maxValue: Int): Pair<Int, Int> {
 }
 
 fun main() {
-    val minesCount = 10
     val boardSize = 9
     val board = MutableList(boardSize) {
         MutableList(boardSize) { SAFE_CELL }
     }
-    repeat(minesCount) {
+    print("How many mines do you want on the field? ")
+    repeat(readln().toInt()) {
         var x: Int
         var y: Int
         do {
