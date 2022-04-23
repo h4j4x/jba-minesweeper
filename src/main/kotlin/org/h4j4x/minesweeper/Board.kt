@@ -7,6 +7,7 @@ class Board(val size: Int) {
     private var minesCount = 0
     private var minesCleared = 0
     private var safeCellsCleared = 0
+    private var unexploredCount = size * size
 
     init {
         cells = mutableListOf()
@@ -49,6 +50,7 @@ class Board(val size: Int) {
         minesCount = 0
         minesCleared = 0
         safeCellsCleared = 0
+        unexploredCount = size * size
         for (row in cells) {
             for (cell in row) {
                 cell.clear()
@@ -74,12 +76,7 @@ class Board(val size: Int) {
         return cellsAround
     }
 
-    fun hasMinesUncleared() = minesCount != minesCleared
-
-    fun toggleCellCleared(cell: Cell): Boolean {
-        if (!cell.mined && cell.minesAround > 0) {
-            return false
-        }
+    fun clear(cell: Cell) {
         val step = if (cell.cleared) -1 else 1
         cell.cleared = !cell.cleared
         if (cell.mined) {
@@ -87,8 +84,34 @@ class Board(val size: Int) {
         } else {
             safeCellsCleared += step
         }
-        return true
+        if (hasMinesCleared() && hasNotSafeCellsCleared()) {
+            throw GameOverEvent(true, "Congratulations! You found all the mines!")
+        }
     }
 
-    fun hasSafeCellsCleared() = safeCellsCleared > 0
+    private fun hasMinesCleared() = minesCount == minesCleared || unexploredCount <= minesCount
+
+    private fun hasNotSafeCellsCleared() = safeCellsCleared == 0
+
+    fun explore(cell: Cell) = explore(cell, true)
+
+    private fun explore(cell: Cell, checkWin: Boolean) {
+        if (!cell.explored) {
+            cell.explored = true
+            unexploredCount--
+
+            if (cell.mined && !cell.cleared) {
+                throw GameOverEvent(false, "You stepped on a mine and failed!")
+            }
+            if (cell.minesAround == 0) {
+                val cellsAround = cellsAround(cell)
+                for (cellAround in cellsAround) {
+                    explore(cellAround, false)
+                }
+            }
+            if (checkWin && hasMinesCleared() && hasNotSafeCellsCleared()) {
+                throw GameOverEvent(true, "Congratulations! You found all the mines!")
+            }
+        }
+    }
 }

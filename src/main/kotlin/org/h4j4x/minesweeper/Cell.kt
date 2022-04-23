@@ -3,11 +3,13 @@ package org.h4j4x.minesweeper
 class Cell(val rowIndex: Int, val columnIndex: Int) {
     var mined = false
     var cleared = false
+    var explored = false
     var minesAround = 0
 
     fun clear() {
         mined = false
         cleared = false
+        explored = false
         minesAround = 0
     }
 
